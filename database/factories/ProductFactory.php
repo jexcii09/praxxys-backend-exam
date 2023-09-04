@@ -5,6 +5,8 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Product;
+use App\Models\Category;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
@@ -21,9 +23,11 @@ class ProductFactory extends Factory
 
     public function definition(): array
     {
+        $randomId = Category::inRandomOrder()->first()->id;
+
         return [
-            'name' => fake()->word(),
-            'category' => fake()->word(),
+            'name' => fake()->unique()->word(),
+            'category_id' => $randomId,
             'description' => fake()->randomHtml(1, 2)
         ];
     }

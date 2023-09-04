@@ -24,3 +24,16 @@ Route::group(['prefix' => '/product'], function(){
         return view('product.form');
     });
 });
+
+
+Route::group(['prefix' => '/category'], function(){
+    Route::get('/list', function(){
+        return view('category.list');
+    });
+    Route::get('/create', function(){
+        return view('category.form');
+    });
+    Route::get('/edit/{id}', function(){
+        return view('category.form');
+    });
+});

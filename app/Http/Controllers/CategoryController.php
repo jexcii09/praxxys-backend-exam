@@ -2,20 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-use App\Http\Requests\PaginateRequest;
-
-class ProductController extends Controller
+class CategoryController extends Controller
 {
-    private $name = 'Product';
+    private $name = 'Category';
 
-    public function __construct(Product $product){
-        $this->product = $product;
+    public function __construct(Category $category){
+        $this->category = $category;
     }
-
     /**
      * Display a listing of the resource.
      */
@@ -28,7 +25,7 @@ class ProductController extends Controller
             'keyword' => $request->keyword,
         ];
 
-	    $response = $this->product->with(['category','images']);
+	    $response = $this->category;
 
         if(isset($data['keyword'])){
 			$response = $response->where('name', 'LIKE', '%' . $data['keyword']. '%');
@@ -66,11 +63,9 @@ class ProductController extends Controller
     {
         $data = [
             "name" => $request->name,
-            "category_id" => $request->category_id,
-            "description" => $request->description,
         ];
 
-        $response = $this->product->create($data);
+        $response = $this->category->create($data);
         $response = $response->toArray();
 
         return response()->json(
@@ -86,7 +81,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $response = $this->product->with(['category','images'])->find($id);
+        $response = $this->category->find($id);
 
         return response()->json(
         [
@@ -99,7 +94,7 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function edit(Category $category)
     {
         //
     }
@@ -111,15 +106,13 @@ class ProductController extends Controller
     {
         $data = [
             "name" => $request->name,
-            "category_id" => $request->category_id,
-            "description" => $request->description,
         ];
 
 
-        $response = $this->product->find($id);
+        $response = $this->category->find($id);
         $response->fill($data)->save();
 
-        $response = $this->product->find($id);
+        $response = $this->category->find($id);
 
         return response()->json(
         [
@@ -134,7 +127,7 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $response = $this->product->destroy($id);
+        $response = $this->category->destroy($id);
 
         return response()->json(
         [

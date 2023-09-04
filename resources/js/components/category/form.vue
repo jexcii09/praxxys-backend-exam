@@ -1,26 +1,13 @@
 <template>
     <div class="card">
         <div class="card-header">
-            <label>Create Product</label>
+            <label>Create Category</label>
             <button class="btn btn-danger float-end mb-2" @click="backToListing()">Cancel</button>
         </div>
         <div class="card-body contianer">
             <div class="row">
                 <div class="col-md-12 mb-3">
                     <input type="text" v-model="data.name" class="form-control" placeholder="Input Name" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12 mb-3">
-                    <select class="form-control" v-model="data.category_id">
-                        <option value="" selected disabled>Select Category</option>
-                        <option v-for="(category, key) in categories" :key="key" :value="category.id">{{ category.name }}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <input type="text" v-model="data.description" class="form-control" placeholder="Input Description" />
                 </div>
             </div>
         </div>
@@ -40,17 +27,12 @@
     export default {
         data() {
             return {
-                data: {
-                    category_id: '',
-                    categories: {},
-                    images: {}
-                },
-                categories: {},
+                data: {},
                 pathId: '',
             };
         },
         created(){
-            this.getCategories();
+            
         },
         mounted(){
             var pathname = window.location.pathname;
@@ -64,25 +46,11 @@
 
         },
         methods: {
-            getCategories(){
-                axios.get(config.base_url + config.end_point.categories)
-                .then((response) => {
-                    this.categories = response.data.data;
-                })
-                .catch((error) => {
-                    alert(error);
-                    console.log(error);
-                });
-            },
-            selectCategory(event) {
-                this.data.category_id = event.target.value;
-                console.log(event);
-            },
             store() {
-                axios.post(config.base_url + config.end_point.products, this.data)
+                axios.post(config.base_url + config.end_point.categories, this.data)
                 .then((response) => {
                     alert(response.data.response);
-                   window.location.href = '/product/list';
+                   window.location.href = '/category/list';
                 })
                 .catch((error) => {
                     alert(error);
@@ -90,7 +58,7 @@
                 });
             },
             show(id) {
-                axios.get(config.base_url + config.end_point.products + '/' + id)
+                axios.get(config.base_url + config.end_point.categories + '/' + id)
                 .then((response) => {
                     this.data = response.data.data;
                 })
@@ -100,10 +68,10 @@
                 });
             },
             update(id) {
-                axios.put(config.base_url + config.end_point.products + '/' + id, this.data)
+                axios.put(config.base_url + config.end_point.categories + '/' + id, this.data)
                 .then((response) => {
                     alert(response.data.response);
-                    window.location.href = '/product/list';
+                    window.location.href = '/category/list';
                 })
                 .catch((error) => {
                     alert(error);
@@ -111,7 +79,7 @@
                 });
             },
             backToListing(){
-                window.location.href = '/product/list';
+                window.location.href = '/category/list';
             }
         }
     };
