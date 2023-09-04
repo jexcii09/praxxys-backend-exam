@@ -1,29 +1,40 @@
 <template>
     <div class="container">
-        <button class="btn btn-success float-end mb-2" @click="goToFormCreate()">Create New</button>
-        <table class="table">
-            <thead class="table-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Options</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(product, key) in products.data" :key="key">
-                    <td>{{product.id}}</td>
-                    <td>{{product.name}}</td>
-                    <td>{{product.category.name}}</td>
-                    <td>{{product.description}}</td>
-                    <td>
-                        <a :href="editProductLink(product.id)" class="text-primary">Edit</a> | 
-                        <a href="javascript:void(0)" class="text-danger" data-coreui-toggle="modal" data-coreui-target="#deleteProductModal" @click="openModal(product.id)">Delete</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="card">
+            <div class="card-header">
+                <label>Products List</label>
+                <button class="btn btn-success float-end mb-2" @click="goToFormCreate()">Create New</button>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(product, key) in products.data" :key="key">
+                            <td>{{product.id}}</td>
+                            <td>{{product.name}}</td>
+                            <td>{{product.category.name}}</td>
+                            <td>{{product.description}}</td>
+                            <td>
+                                <a :href="editProductLink(product.id)" class="text-primary">Edit</a> |
+                                <a href="javascript:void(0)" class="text-danger" data-coreui-toggle="modal" data-coreui-target="#deleteProductModal" @click="openModal(product.id)">Delete</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+
+            </div>
+        </div>
+
     </div>
 
 
@@ -47,7 +58,7 @@
 
 </template>
 
-<script>    
+<script>
     import config from '../../config.js';
 
     export default {
@@ -57,7 +68,7 @@
                 deleteModalId: 0,
             };
         },
-        created(){
+        created() {
             this.all();
         },
         methods: {
@@ -67,32 +78,34 @@
                     per_page: 100,
                 }
 
-                axios.get(config.base_url + config.end_point.products, {params})
-                .then((response) => {
-                    this.products = response.data;
-                })
-                .catch((error) => {
-                    alert(error);
-                    console.log(error);
-                });
-            },
-            deleteProduct(id){
-                if(this.deleteModalId !== 0){
-                    axios.delete(config.base_url + config.end_point.products + '/' + id)
+                axios.get(config.base_url + config.end_point.products, {
+                        params
+                    })
                     .then((response) => {
-                        this.$refs.Close.click();
-                        this.all();
-                        this.deleteModalId = 0;
-                        alert(response.data.response);
+                        this.products = response.data;
                     })
                     .catch((error) => {
                         alert(error);
                         console.log(error);
-                    }); 
-                }
-                
+                    });
             },
-            openModal(id){
+            deleteProduct(id) {
+                if (this.deleteModalId !== 0) {
+                    axios.delete(config.base_url + config.end_point.products + '/' + id)
+                        .then((response) => {
+                            this.$refs.Close.click();
+                            this.all();
+                            this.deleteModalId = 0;
+                            alert(response.data.response);
+                        })
+                        .catch((error) => {
+                            alert(error);
+                            console.log(error);
+                        });
+                }
+
+            },
+            openModal(id) {
                 this.deleteModalId = id;
             },
             goToFormCreate() {

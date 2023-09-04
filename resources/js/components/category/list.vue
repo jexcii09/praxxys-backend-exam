@@ -1,25 +1,35 @@
 <template>
     <div class="container">
-        <button class="btn btn-success float-end mb-2" @click="goToFormCreate()">Create New</button>
-        <table class="table">
-            <thead class="table-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Options</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(category, key) in categories.data" :key="key">
-                    <td>{{category.id}}</td>
-                    <td>{{category.name}}</td>
-                    <td>
-                        <a :href="editCategoryLink(category.id)" class="text-primary">Edit</a> | 
-                        <a href="javascript:void(0)" class="text-danger" data-coreui-toggle="modal" data-coreui-target="#deleteCategoryModal" @click="openModal(category.id)">Delete</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="card">
+            <div class="card-header">
+                <label>Categories List</label>
+                <button class="btn btn-success float-end mb-2" @click="goToFormCreate()">Create New</button>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(category, key) in categories.data" :key="key">
+                            <td>{{category.id}}</td>
+                            <td>{{category.name}}</td>
+                            <td>
+                                <a :href="editCategoryLink(category.id)" class="text-primary">Edit</a> |
+                                <a href="javascript:void(0)" class="text-danger" data-coreui-toggle="modal" data-coreui-target="#deleteCategoryModal" @click="openModal(category.id)">Delete</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+
+            </div>
+        </div>
     </div>
 
 
@@ -43,7 +53,7 @@
 
 </template>
 
-<script>    
+<script>
     import config from '../../config.js';
 
     export default {
@@ -53,7 +63,7 @@
                 deleteModalId: 0,
             };
         },
-        created(){
+        created() {
             this.all();
         },
         methods: {
@@ -63,32 +73,34 @@
                     per_page: 100,
                 }
 
-                axios.get(config.base_url + config.end_point.categories, {params})
-                .then((response) => {
-                    this.categories = response.data;
-                })
-                .catch((error) => {
-                    alert(error);
-                    console.log(error);
-                });
-            },
-            deleteCategory(id){
-                if(this.deleteModalId !== 0){
-                    axios.delete(config.base_url + config.end_point.categories + '/' + id)
+                axios.get(config.base_url + config.end_point.categories, {
+                        params
+                    })
                     .then((response) => {
-                        this.$refs.Close.click();
-                        this.all();
-                        this.deleteModalId = 0;
-                        alert(response.data.response);
+                        this.categories = response.data;
                     })
                     .catch((error) => {
                         alert(error);
                         console.log(error);
-                    }); 
-                }
-                
+                    });
             },
-            openModal(id){
+            deleteCategory(id) {
+                if (this.deleteModalId !== 0) {
+                    axios.delete(config.base_url + config.end_point.categories + '/' + id)
+                        .then((response) => {
+                            this.$refs.Close.click();
+                            this.all();
+                            this.deleteModalId = 0;
+                            alert(response.data.response);
+                        })
+                        .catch((error) => {
+                            alert(error);
+                            console.log(error);
+                        });
+                }
+
+            },
+            openModal(id) {
                 this.deleteModalId = id;
             },
             goToFormCreate() {
