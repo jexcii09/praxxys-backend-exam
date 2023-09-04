@@ -20,4 +20,4 @@ use App\Http\Controllers\ProductController;
 //     return $request->user();
 // });
 
-Route::resource('/product', ProductController::class);
+Route::resource('/products', ProductController::class);
