@@ -28,7 +28,7 @@ class ProductController extends Controller
             'keyword' => $request->keyword,
         ];
 
-	    $response = $this->product;
+	    $response = $this->product->with(['images']);
 
         if(isset($data['keyword'])){
 			$response = $response->where('name', 'LIKE', '%' . $data['keyword']. '%');
@@ -41,8 +41,7 @@ class ProductController extends Controller
 		if($data['paginate']){
 			return $response = $response->paginate($data['per_page'])->toArray();
 		}
-
-		$response = $response->all()->toArray();
+		$response = $response->get()->toArray();
 
         return response()->json(
         [
@@ -88,7 +87,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $response = $this->product->find($id);
+        $response = $this->product->with(['images'])->find($id);
 
         return response()->json(
         [
