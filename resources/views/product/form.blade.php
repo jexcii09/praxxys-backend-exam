@@ -1,6 +1,6 @@
 @extends('layouts.admin-template')
  
-@section('title', 'Products')
+@section('title', 'Create Product')
 
 <div id="app">
     <div class="main">
@@ -10,7 +10,7 @@
         <div class="main-panel">
             <x-header/>
             <div class="container mt-5 pb-5">
-                <product-list />
+                <product-form />
             </div>
         </div>
     </div>

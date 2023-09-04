@@ -1,6 +1,6 @@
 <template>
-    <div class="container mt-5">
-        <button class="btn btn-success float-end mb-2">Create New</button>
+    <div class="container">
+        <button class="btn btn-success float-end mb-2" @click="goToFormCreate()">Create New</button>
         <table class="table">
             <thead class="table-dark">
                 <tr>
@@ -8,6 +8,7 @@
                     <th scope="col">Name</th>
                     <th scope="col">Category</th>
                     <th scope="col">Description</th>
+                    <th scope="col">Options</th>
                 </tr>
             </thead>
             <tbody>
@@ -16,6 +17,10 @@
                     <td>{{product.name}}</td>
                     <td>{{product.category}}</td>
                     <td>{{product.description}}</td>
+                    <td>
+                        <a :href="editProductLink(product.id)" class="text-primary">Edit</a> | 
+                        <a href="#" class="text-danger">Delete</a>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -38,7 +43,7 @@
             all() {
                 let params = {
                     paginate: true,
-                    per_page: 2,
+                    per_page: 100,
                 }
 
                 axios.get(config.base_url + config.end_point.products, {params})
@@ -50,6 +55,13 @@
                     console.log(error);
                 });
             },
+            goToFormCreate() {
+                window.location.href = '/product/create';
+            },
+            editProductLink(productId) {
+                // You can generate the dynamic href here based on productId
+                return `/product/edit/${productId}`;
+            }
         }
     };
 

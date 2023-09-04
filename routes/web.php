@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/product/list', function(){
-    return view('product.list');
+Route::group(['prefix' => '/product'], function(){
+    Route::get('/list', function(){
+        return view('product.list');
+    });
+    Route::get('/create', function(){
+        return view('product.form');
+    });
+    Route::get('/edit/{id}', function(){
+        return view('product.form');
+    });
 });

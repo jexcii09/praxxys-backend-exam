@@ -65,15 +65,37 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = [
+            "name" => $request->name,
+            "category" => $request->category,
+            "description" => $request->description,
+        ];
+
+
+        $response = $this->product->create($data);
+        $response = $response->toArray();
+
+        return response()->json(
+        [
+            "response" => $this->name . ' Successfully Created.', 
+            "data" => $response,
+            "status" => Response::HTTP_CREATED
+        ], Response::HTTP_CREATED);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show($id)
     {
-        //
+        $response = $this->product->find($id);
+
+        return response()->json(
+        [
+            "response" => $this->name . ' Successfully Feteched.', 
+            "data" => $response,
+            "status" => Response::HTTP_OK
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -87,9 +109,23 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
-        //
+        $data = [
+            "name" => $request->name,
+            "category" => $request->category,
+            "description" => $request->description,
+        ];
+
+
+        $response = $this->product->find($id)->update($data);
+
+        return response()->json(
+        [
+            "response" => $this->name . ' Successfully Updated.', 
+            "data" => $response,
+            "status" => Response::HTTP_CREATED
+        ], Response::HTTP_CREATED);
     }
 
     /**
