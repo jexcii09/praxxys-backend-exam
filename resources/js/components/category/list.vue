@@ -27,7 +27,15 @@
                 </table>
             </div>
             <div class="card-footer">
-
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item" v-for="(value, key) in categories.links" 
+                        :class="{'active' : value.active == true, 'disabled' : value.url == null}" 
+                        :key="key">
+                            <a class="page-link" href="javascript:void(0)" @click="paginate(value.url)" v-html="value.label"></a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
@@ -61,28 +69,27 @@
             return {
                 categories: {},
                 deleteModalId: 0,
+                filter: {
+                    paginate : 1,
+                    per_page: 5,
+                    page: 1,
+                    order_by: ''
+                },
             };
         },
         created() {
-            this.all();
+            this.all(this.filter);
         },
         methods: {
-            all() {
-                let params = {
-                    paginate: true,
-                    per_page: 100,
-                }
-
-                axios.get(config.base_url + config.end_point.categories, {
-                        params
-                    })
-                    .then((response) => {
-                        this.categories = response.data;
-                    })
-                    .catch((error) => {
-                        alert(error);
-                        console.log(error);
-                    });
+            all(query) {
+                axios.get(config.base_url + config.end_point.categories, {params: query})
+                .then((response) => {
+                    this.categories = response.data;
+                })
+                .catch((error) => {
+                    alert(error);
+                    console.log(error);
+                });
             },
             deleteCategory(id) {
                 if (this.deleteModalId !== 0) {
@@ -109,6 +116,28 @@
             editCategoryLink(categoryId) {
                 // You can generate the dynamic href here based on categoryId
                 return `/category/edit/${categoryId}`;
+            },
+
+
+            paginate(url){
+                const page = this.splitUrlPaginate(url);
+                this.filter.page = page;
+                this.all(this.filter);
+            },
+
+            splitUrlPaginate(url){
+                const page = url.split('?');
+                if(page.length == 2) {
+                    let vars = page[1].split('&');
+                    let getVars = {};
+                    let tmp = '';
+                    vars.forEach(function(v) {
+                    tmp = v.split('=');
+                    if(tmp.length == 2)
+                        getVars[tmp[0]] = tmp[1];
+                    });
+                    return getVars.page;
+                }
             }
         }
     };

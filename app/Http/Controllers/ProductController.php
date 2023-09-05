@@ -25,13 +25,20 @@ class ProductController extends Controller
             'paginate' => $request->paginate,
             'per_page' => $request->per_page,
             'order_by' => $request->order_by,
+            'category_id' => $request->category_id,
             'keyword' => $request->keyword,
         ];
 
 	    $response = $this->product->with(['category','images']);
 
+
+        if(isset($data['category_id'])){
+            $response = $response->where('category_id', $data['category_id']);
+        }
+
         if(isset($data['keyword'])){
-			$response = $response->where('name', 'LIKE', '%' . $data['keyword']. '%');
+			$response = $response->where('name', 'LIKE', '%' . $data['keyword']. '%')
+                ->orWhere('description', 'LIKE', '%' . $data['keyword']. '%');
 		}
 
 		if(isset($data['order_by'])){

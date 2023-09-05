@@ -1,7 +1,8 @@
 <template>
     <div class="card">
         <div class="card-header">
-            <label>Create Category</label>
+            <label v-if="!this.pathId">Create Category</label>
+            <label v-if="this.pathId">Update Category</label>
             <button class="btn btn-danger float-end mb-2" @click="backToListing()">Cancel</button>
         </div>
         <div class="card-body contianer">
