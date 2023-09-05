@@ -49,6 +49,9 @@
                                 <a href="javascript:void(0)" class="text-danger" data-coreui-toggle="modal" data-coreui-target="#deleteProductModal" @click="openModal(product.id)">Delete</a>
                             </td>
                         </tr>
+                        <tr>
+                            <td colspan="5" v-if="!products.total">No Results.</td> 
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -116,10 +119,11 @@
             console.log(this.token);
         },
         methods: {
-            all(query) {
+            all(query) { 
                 axios.get(config.base_url + config.end_point.products, {params: query})
                 .then((response) => {
                     this.products = response.data;
+                    console.log(this.products);
                 })
                 .catch((error) => {
                     alert(error);
