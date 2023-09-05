@@ -12,7 +12,7 @@ class Product extends Model
     use HasFactory;
 
     protected $guarded = ['id', 'created_at', 'udpated_at'];
-    protected $fillable = ['name', 'category_id', 'description'];
+    protected $fillable = ['name', 'category_id', 'description', 'date'];
 
     public function category(): BelongsTo
     {

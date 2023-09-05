@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->integer('category_id');
             $table->text('description');
+            $table->dateTime('date')->nullable();
             $table->timestamps();
         });
     }

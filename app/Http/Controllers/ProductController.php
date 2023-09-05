@@ -75,6 +75,7 @@ class ProductController extends Controller
             "name" => $request->name,
             "category_id" => $request->category_id,
             "description" => $request->description,
+            "date" => $request->date
         ];
 
         $response = $this->product->create($data);
@@ -120,6 +121,7 @@ class ProductController extends Controller
             "name" => $request->name,
             "category_id" => $request->category_id,
             "description" => $request->description,
+            "date" => $request->date
         ];
 
 

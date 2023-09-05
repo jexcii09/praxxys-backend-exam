@@ -18,25 +18,37 @@
             <div class="step1" id="step1" ref="Step1" v-show="currentTab == 1">
                 <div class="row">
                     <div class="col-md-12 mb-3">
-                        <input type="text" v-model="data.name" class="form-control" placeholder="Input Name" />
+                        <input type="text" v-model="data.name" class="form-control" 
+                        :class="{'is-invalid' : errors.name && errors.name == 'true'}" placeholder="Input Name" />
+                        <div v-if="errors && errors.name == 'true'" class="text-danger">
+                            <small class="ml-3">Name is required</small>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12 mb-3">
-                        <select class="form-control" v-model="data.category_id">
+                        <select class="form-control" v-model="data.category_id"
+                        :class="{'is-invalid' : errors.category_id && errors.category_id == 'true'}">
                             <option value="" selected disabled>Select Category</option>
                             <option v-for="(category, key) in categories" :key="key" :value="category.id">{{ category.name }}</option>
                         </select>
+                        <div v-if="errors && errors.category_id == 'true'" class="text-danger">
+                            <small class="ml-3">Category is required</small>
+                        </div>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-12">
-                        <input type="text" v-model="data.description" class="form-control" placeholder="Input Description" />
+                        <input type="text" v-model="data.description" class="form-control" 
+                        :class="{'is-invalid' : errors.description && errors.description == 'true'}" placeholder="Input Description" />
+                        <div v-if="errors && errors.description == 'true'" class="text-danger">
+                            <small class="ml-3">Description is required</small>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button class="btn btn-outline-primary mb-2 mr-3" @click="backStep2()">Proceed</button>
+                        <button class="btn btn-outline-primary mb-2 mr-3" @click="proceedStep2()">Proceed</button>
                     </div>
                 </div>
             </div>
@@ -63,7 +75,10 @@
             <div class="step3" id="step3" ref="Step3" v-show="currentTab == 3">
                 <div class="row">
                     <div class="col-md-3 mb-3">
-                        <input type="date" class="form-control">
+                        <input type="datetime-local" class="form-control" v-model="data.date" :class="{'is-invalid' : errors.date && errors.date == 'true'}">
+                        <div v-if="errors && errors.date == 'true'" class="text-danger">
+                            <small class="ml-3">Date is required</small>
+                        </div>
                     </div>
                 </div>
 
@@ -84,17 +99,23 @@
 
 <script>    
     import config from '../../config.js';
-    import { useRoute } from 'vue-router';
 
     export default {
         data() {
             return {
                 data: {
                     category_id: '',
+                    date: '',
                     categories: {},
                     images: {}
                 },
                 categories: {},
+                errors: {
+                    name: 'false',
+                    category_id: 'false',
+                    description: 'false',
+                    date: 'false'
+                },
                 pathId: '',
                 currentTab:1,
             };
@@ -122,7 +143,22 @@
             },
 
             proceedStep2(){
-                this.currentTab = 2;
+                this.errors = {
+                    name: 'false',
+                    category_id: 'false',
+                    description: 'false',
+                    date: 'false'
+                };
+
+                if(!this.data.name){
+                    this.errors.name = 'true';
+                } else if(!this.data.category_id){
+                    this.errors.category_id = 'true';
+                } else if(!this.data.description){
+                    this.errors.description = 'true';
+                } else {
+                    this.currentTab = 2;
+                }
             },
             proceedStep3(){
                 this.currentTab = 3;
@@ -144,15 +180,28 @@
                 console.log(event);
             },
             store() {
-                axios.post(config.base_url + config.end_point.products, this.data)
-                .then((response) => {
-                    alert(response.data.response);
-                   window.location.href = '/product/list';
-                })
-                .catch((error) => {
-                    alert(error);
-                    console.log(error);
-                });
+                this.errors.date = 'false';
+
+                console.log(this.data);
+                if(!this.data.date){
+                    this.errors.date = 'true';
+                } else {
+                    this.currentTab = 3;
+                    this.data.date = this.formatDateTime(this.data.date);
+
+
+                    axios.post(config.base_url + config.end_point.products, this.data)
+                    .then((response) => {
+                        alert(response.data.response);
+                    window.location.href = '/product/list';
+                    })
+                    .catch((error) => {
+                        alert(error);
+                        console.log(error);
+                    });
+                }
+
+                
             },
             show(id) {
                 axios.get(config.base_url + config.end_point.products + '/' + id)
@@ -179,6 +228,20 @@
                 window.location.href = '/product/list';
             },
 
+
+            formatDateTime(date){
+                // Convert the original date string to a Date object
+                const originalDate = new Date(date);
+
+                // Set the desired time (00:11:48)
+                originalDate.setHours(0);
+                originalDate.setMinutes(11);
+                originalDate.setSeconds(48);
+
+                // Format the result as a string in the desired format (YYYY-MM-DD HH:mm:ss)
+                const formattedDate = originalDate.toISOString().slice(0, 19).replace("T", " ");
+                return formattedDate;
+            },
 
 
 
