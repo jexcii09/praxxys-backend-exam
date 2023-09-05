@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
@@ -28,7 +29,8 @@ class ProductFactory extends Factory
         return [
             'name' => fake()->unique()->word(),
             'category_id' => $randomId,
-            'description' => fake()->randomHtml(1, 2)
+            'description' => fake()->randomHtml(1, 2),
+            'date' => Carbon::now()
         ];
     }
 }
