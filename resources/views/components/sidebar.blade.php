@@ -14,7 +14,7 @@
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/user/list">
-          <i class="nav-icon cil-user"></i> Users Page
+          <i class="nav-icon cil-movie"></i> Videos
         </a>
       </li>
     </ul>

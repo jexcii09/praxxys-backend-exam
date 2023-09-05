@@ -42,7 +42,7 @@
                         <tr v-for="(product, key) in products.data" :key="key">
                             <td>{{product.id}}</td>
                             <td>{{product.name}}</td>
-                            <td>{{product.category.name}}</td>
+                            <td>{{product.category?.name}}</td>
                             <td>{{product.description}}</td>
                             <td>
                                 <a :href="editProductLink(product.id)" class="text-primary">Edit</a> |
@@ -92,6 +92,7 @@
     import config from '../../config.js';
 
     export default {
+        props: ['token'],
         data() {
             return {
                 products: {},
@@ -109,6 +110,10 @@
         created() {
             this.all(this.filter);
             this.getCategoriesForSearch();
+            
+        },
+        mounted(){
+            console.log(this.token);
         },
         methods: {
             all(query) {

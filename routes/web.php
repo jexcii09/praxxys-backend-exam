@@ -11,9 +11,14 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/', function(){
+    return redirect('/login');
+});
 
 
-Route::group(['prefix' => '/product'], function(){
+Auth::routes();
+
+Route::group(['prefix' => '/product', 'middleware' => 'auth'], function(){
     Route::get('/list', function(){
         return view('product.list');
     });
@@ -26,7 +31,7 @@ Route::group(['prefix' => '/product'], function(){
 });
 
 
-Route::group(['prefix' => '/category'], function(){
+Route::group(['prefix' => '/category', 'middleware' => 'auth'], function(){
     Route::get('/list', function(){
         return view('category.list');
     });
@@ -37,3 +42,7 @@ Route::group(['prefix' => '/category'], function(){
         return view('category.form');
     });
 });
+
+
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

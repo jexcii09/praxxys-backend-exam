@@ -13,8 +13,12 @@
     <link rel="stylesheet" href="{{asset("css/admin-template.css")}}" />
 
     <title>PRAXXYS - @yield('title')</title>
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
   </head>
   <body>
+    
     
     <div>
         @yield('content')
