@@ -9,9 +9,9 @@
         <div class="card-body contianer">
 
             <nav class="breadcrumbs mb-3">
-                <a href="javascript:void(0)" class="breadcrumbs_item" :class="{'is-active' : currentTab == 1}">Step 1</a>
-                <a href="javascript:void(0)" class="breadcrumbs_item" :class="{'is-active' : currentTab == 2}">Step 2</a> 
-                <a href="javascript:void(0)" class="breadcrumbs_item" :class="{'is-active' : currentTab == 3}">Step 3</a>
+                <a href="javascript:void(0)" class="breadcrumbs_item" :class="{'is-active text-uppercase' : currentTab == 1}">Step 1</a>
+                <a href="javascript:void(0)" class="breadcrumbs_item" :class="{'is-active text-uppercase' : currentTab == 2}">Step 2</a> 
+                <a href="javascript:void(0)" class="breadcrumbs_item" :class="{'is-active text-uppercase' : currentTab == 3}">Step 3</a>
             </nav>
 
             <!-- STEP 1 -->
@@ -116,20 +116,15 @@
         methods: {
             backStep1(){
                 this.currentTab = 1;
-                this.$refs.Step1.click();
             },
             backStep2(){
                 this.currentTab = 2;
-                this.$refs.Step2.click();
-                this.$refs.Step2.click();
             },
 
             proceedStep2(){
-                this.$refs.Step2.click();
                 this.currentTab = 2;
             },
             proceedStep3(){
-                this.$refs.Step3.click();
                 this.currentTab = 3;
             },
 
@@ -209,21 +204,6 @@
   text-decoration: none;
   transition: background 0.2s linear;
 }
-
-.breadcrumbs_item:hover:after,
-.breadcrumbs_item:hover {
-  /* background: #f5f3ed; */
-  background: #3c4b64;
-  color: #fff;
-}
-
-.breadcrumbs_item:focus:after,
-.breadcrumbs_item:focus,
-.breadcrumbs_item.is-active:focus {
-  background:  #323f4a;
-  color: #fff;
-}
-
 .is-active::after {
   background:  #323f4a !important;
 }
