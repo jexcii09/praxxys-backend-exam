@@ -29,7 +29,7 @@ class ProductFactory extends Factory
         return [
             'name' => fake()->unique()->word(),
             'category_id' => $randomId,
-            'description' => fake()->randomHtml(1, 2),
+            'description' => fake()->text($maxNbChars = 300),
             'date' => Carbon::now()
         ];
     }

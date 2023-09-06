@@ -12,11 +12,11 @@
           <i class="nav-icon cil-basket"></i> Products Page
         </a>
       </li>
-      <li class="nav-item">
+      {{-- <li class="nav-item">
         <a class="nav-link" href="/user/list">
           <i class="nav-icon cil-movie"></i> Videos
         </a>
-      </li>
+      </li> --}}
     </ul>
     {{-- <button class="sidebar-toggler" type="button"></button> --}}
   </div>

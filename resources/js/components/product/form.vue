@@ -39,8 +39,9 @@
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-12">
-                        <input type="text" v-model="data.description" class="form-control" 
-                        :class="{'is-invalid' : errors.description && errors.description == 'true'}" placeholder="Input Description" />
+                        <textarea rows="4" v-model="data.description" class="form-control" 
+                        :class="{'is-invalid' : errors.description && errors.description == 'true'}" placeholder="Input Description">
+                        </textarea>
                         <div v-if="errors && errors.description == 'true'" class="text-danger">
                             <small class="ml-3">Description is required</small>
                         </div>
@@ -57,6 +58,7 @@
             <!-- STEP 2 -->
             <div class="step2" id="step2" ref="Step2" v-show="currentTab == 2">
                 <div class="row">
+                    
                     <div class="col-md-12 mb-3">
                         <label>Upload Images</label>
                         <!-- <input type="file" class="form-control"/> -->
@@ -66,7 +68,11 @@
                             <small class="ml-3">Image is required</small>
                         </div>
                     </div>
+                    <div class="col-md-12">
+                        <small>Accepted File: .jpeg, jpg and .png only</small>
+                    </div>
                 </div>
+                
 
                 <div class="row" v-if="data.images">
                     <div class="col-md-3" v-for="(image, key) in data.images" :key="key">
@@ -127,6 +133,7 @@
                 categories: {},
 
                 images : null,
+                toDeleteImages: [],
 
                 errors: {
                     name: 'false',
@@ -154,9 +161,28 @@
         },
         methods: {
             uploadFile() {
-                this.images = this.$refs.file.files;
+                var imageUploaded = this.$refs.file.files;
+
+                for (var i = 0; i < imageUploaded.length; i++ ){
+                    if(imageUploaded[i].type != 'image/jpeg' && 
+                    imageUploaded[i].type != 'image/png' &&
+                    imageUploaded[i].type != 'image/jpg')
+                    {
+                        alert("Please upload .jpeg, jpg and .png only.");
+                        this.$refs.file.value = null;
+                        this.images = null;
+                        return;
+                    } else {
+                        this.errors.images = 'false';
+                    }
+                }
+
+                this.images = imageUploaded;
+                console.log(this.images);
+                
             },
             saveImage(id) {
+  
                 for (var i = 0; i < this.images.length; i++ ){
                     let file = this.$refs.file.files[i];
 
@@ -176,6 +202,7 @@
                 }
             },
             removeImage(key){
+                this.toDeleteImages.push(this.data.images[key].id);
                 this.data.images.splice(key, 1);
             },
 
@@ -191,7 +218,6 @@
             },
             selectCategory(event) {
                 this.data.category_id = event.target.value;
-                console.log(event);
             },
             store() {
                 this.errors.date = 'false';
@@ -229,8 +255,29 @@
             update(id) {
                 axios.put(config.base_url + config.end_point.products + '/' + id, this.data)
                 .then((response) => {
-                    alert(response.data.response);
-                    window.location.href = '/product/list';
+                    var product_id = response.data.data.id
+
+                    if(this.toDeleteImages){
+                        this.toDeleteImages.forEach( (value) => {
+                            this.delete(value);
+                        });
+                    }
+
+                    if(this.images){
+                        this.saveImage(product_id);
+                    }
+
+                    if(!alert(response.data.response)){window.location.href = '/product/list';}
+                })
+                .catch((error) => {
+                    alert(error);
+                    console.log(error);
+                });
+            },
+            delete(id) {
+                axios.delete(config.base_url + config.end_point.images + '/' + id)
+                .then((response) => {
+                    console.log(response.data.response);
                 })
                 .catch((error) => {
                     alert(error);
@@ -299,8 +346,12 @@
                 }
             },
             proceedStep3(){
-                if(!this.images){
-                    this.errors.images = 'true';
+                if(!this.pathId){
+                    if(!this.images){
+                        this.errors.images = 'true';
+                    } else {
+                        this.currentTab = 3;
+                    }
                 } else {
                     this.currentTab = 3;
                 }

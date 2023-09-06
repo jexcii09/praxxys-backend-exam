@@ -116,7 +116,7 @@
             
         },
         mounted(){
-            console.log(this.token);
+            // console.log(this.token);
         },
         methods: {
             all(query) { 
