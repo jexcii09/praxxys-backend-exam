@@ -3,6 +3,7 @@ const config = Object.freeze({
     end_point: {
         products: '/products',
         categories: '/categories',
+        images: '/images',
     }
 });
 

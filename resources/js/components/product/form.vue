@@ -58,10 +58,25 @@
             <div class="step2" id="step2" ref="Step2" v-show="currentTab == 2">
                 <div class="row">
                     <div class="col-md-12 mb-3">
-                        Upload Images
+                        <label>Upload Images</label>
+                        <!-- <input type="file" class="form-control"/> -->
+                        <input type="file" @change="uploadFile" class="form-control" ref="file"
+                        :class="{'is-invalid' : errors.images && errors.images == 'true'}" accept=".png, .jpg, .jpeg" multiple>
+                        <div v-if="errors && errors.images == 'true'" class="text-danger">
+                            <small class="ml-3">Image is required</small>
+                        </div>
                     </div>
                 </div>
 
+                <div class="row" v-if="data.images">
+                    <div class="col-md-3" v-for="(image, key) in data.images" :key="key">
+                        <img :src="image.path" class="img-thumbnail" />
+                        <a href="javascript:void(0)" class="text-danger float-end" @click="removeImage(key)">
+                            <small><i class="nav-icon cil-x"></i> Remove</small>
+                        </a>
+                    </div>
+                </div>
+            
 
                 <div class="row">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -110,12 +125,17 @@
                     images: {}
                 },
                 categories: {},
+
+                images : null,
+
                 errors: {
                     name: 'false',
                     category_id: 'false',
                     description: 'false',
+                    images: 'false',
                     date: 'false'
                 },
+
                 pathId: '',
                 currentTab:1,
             };
@@ -131,39 +151,33 @@
                 this.pathId = pathId;
                 this.show(this.pathId);
             }
-
-
         },
         methods: {
-            backStep1(){
-                this.currentTab = 1;
+            uploadFile() {
+                this.images = this.$refs.file.files;
             },
-            backStep2(){
-                this.currentTab = 2;
-            },
+            saveImage(id) {
+                for (var i = 0; i < this.images.length; i++ ){
+                    let file = this.$refs.file.files[i];
 
-            proceedStep2(){
-                this.errors = {
-                    name: 'false',
-                    category_id: 'false',
-                    description: 'false',
-                    date: 'false'
-                };
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('product_id', id);
+                    const headers = { 'Content-Type': 'multipart/form-data' };
 
-                if(!this.data.name){
-                    this.errors.name = 'true';
-                } else if(!this.data.category_id){
-                    this.errors.category_id = 'true';
-                } else if(!this.data.description){
-                    this.errors.description = 'true';
-                } else {
-                    this.currentTab = 2;
+                    axios.post(config.base_url + config.end_point.images, formData, { headers })
+                    .then((response) => {
+                        console.log(response.data);
+                    })
+                    .catch((error) => {
+                        alert(error);
+                        console.log(error);
+                    });
                 }
             },
-            proceedStep3(){
-                this.currentTab = 3;
+            removeImage(key){
+                this.data.images.splice(key, 1);
             },
-
 
             getCategories(){
                 axios.get(config.base_url + config.end_point.categories)
@@ -181,27 +195,26 @@
             },
             store() {
                 this.errors.date = 'false';
+                this.errors.images = 'false';
 
-                console.log(this.data);
                 if(!this.data.date){
                     this.errors.date = 'true';
                 } else {
                     this.currentTab = 3;
                     this.data.date = this.formatDateTime(this.data.date);
 
-
                     axios.post(config.base_url + config.end_point.products, this.data)
                     .then((response) => {
-                        alert(response.data.response);
-                    window.location.href = '/product/list';
+                        var product_id = response.data.data.id             
+                        this.saveImage(product_id);
+
+                        if(!alert(response.data.response)){window.location.href = '/product/list';}
                     })
                     .catch((error) => {
                         alert(error);
                         console.log(error);
                     });
                 }
-
-                
             },
             show(id) {
                 axios.get(config.base_url + config.end_point.products + '/' + id)
@@ -243,8 +256,55 @@
                 return formattedDate;
             },
 
+            backStep1(){
+                this.currentTab = 1;
 
+                this.errors = {
+                    name: 'false',
+                    category_id: 'false',
+                    description: 'false',
+                    images: 'false',
+                    date: 'false'
+                };
+            },
+            backStep2(){
+                this.currentTab = 2;
 
+                this.errors = {
+                    name: 'false',
+                    category_id: 'false',
+                    description: 'false',
+                    images: 'false',
+                    date: 'false'
+                };
+            },
+
+            proceedStep2(){
+                this.errors = {
+                    name: 'false',
+                    category_id: 'false',
+                    description: 'false',
+                    images: 'false',
+                    date: 'false'
+                };
+
+                if(!this.data.name){
+                    this.errors.name = 'true';
+                } else if(!this.data.category_id){
+                    this.errors.category_id = 'true';
+                } else if(!this.data.description){
+                    this.errors.description = 'true';
+                } else {
+                    this.currentTab = 2;
+                }
+            },
+            proceedStep3(){
+                if(!this.images){
+                    this.errors.images = 'true';
+                } else {
+                    this.currentTab = 3;
+                }
+            },
         }
     };
 
