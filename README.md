@@ -26,7 +26,7 @@ CLI 1: `php artisan serve` <br>
 CLI 1: `npm run dev`
 
 ### Step 5
-You can now access the application using this url: http:http://localhost:8000/ <br>
+You can now access the application using this url: http://localhost:8000/ <br>
 You can login now using this credential below <br>
 Username: `testuser` <br>
 Email: `test@example.com` <br>
